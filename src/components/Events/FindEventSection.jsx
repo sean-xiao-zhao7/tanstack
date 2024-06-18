@@ -2,7 +2,10 @@ import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { fetchEvents } from "../../util/http";
+
 import LoadingIndicator from "../UI/LoadingIndicator";
+import ErrorBlock from "../UI/ErrorBlock";
+import EventItem from "./EventItem";
 
 export default function FindEventSection() {
     const searchElement = useRef();
@@ -22,6 +25,25 @@ export default function FindEventSection() {
 
     if (isPending) {
         content = <LoadingIndicator />;
+    } else if (isError) {
+        content = (
+            <ErrorBlock
+                title="Error Finding Events"
+                message={error.info?.message || "Server error."}
+            />
+        );
+    }
+
+    if (data) {
+        content = (
+            <ul className="events-list">
+                {data.map((event) => (
+                    <li key={event.id}>
+                        <EventItem event={event} />
+                    </li>
+                ))}
+            </ul>
+        );
     }
 
     return (
