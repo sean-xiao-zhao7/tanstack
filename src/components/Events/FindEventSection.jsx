@@ -1,12 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import { fetchEvents } from "../../util/http";
+import LoadingIndicator from "../UI/LoadingIndicator";
 
 export default function FindEventSection() {
     const searchElement = useRef();
     const [searchTerm, setSearchTerm] = useState("");
 
-    const { data } = useQuery({
+    const { data, isPending, isError, error } = useQuery({
         queryKey: ["fetchEvents", { searchTerm: searchTerm }],
         queryFn: () => fetchEvents(searchTerm),
     });
@@ -14,6 +16,12 @@ export default function FindEventSection() {
     function handleSubmit(event) {
         event.preventDefault();
         setSearchTerm(searchElement.current.value);
+    }
+
+    let content = <p>Please enter a search term and to find events.</p>;
+
+    if (isPending) {
+        content = <LoadingIndicator />;
     }
 
     return (
@@ -29,7 +37,7 @@ export default function FindEventSection() {
                     <button>Search</button>
                 </form>
             </header>
-            <p>Please enter a search term and to find events.</p>
+            {content}
         </section>
     );
 }
