@@ -1,32 +1,16 @@
-import { useEffect, useState } from "react";
-
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
 import EventItem from "./EventItem.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEvents } from "../../util/http.js";
 
 export default function NewEventsSection() {
-    const [data, setData] = useState();
-    const [error, setError] = useState();
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        fetchEvents()
-            .then((events) => {
-                setData(events);
-            })
-            .catch((error) => {
-                setError(error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    }, []);
+    useQuery({
+        queryFn: fetchEvents,
+        queryKey: "fetchEvents",
+    });
 
     let content;
-
-    if (isLoading) {
-        content = <LoadingIndicator />;
-    }
 
     if (error) {
         content = (
