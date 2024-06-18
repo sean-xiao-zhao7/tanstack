@@ -5,12 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../util/http.js";
 
 export default function NewEventsSection() {
-    useQuery({
+    const { data, isPending, isError, error } = useQuery({
         queryFn: fetchEvents,
-        queryKey: "fetchEvents",
+        queryKey: ["fetchEvents"],
     });
 
     let content;
+
+    if (isPending) {
+        content = <LoadingIndicator />;
+    }
 
     if (error) {
         content = (
