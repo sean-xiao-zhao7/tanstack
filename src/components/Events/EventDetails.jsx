@@ -32,25 +32,28 @@ export default function EventDetails() {
                 {!isLoading && (
                     <>
                         <header>
-                            <h1>EVENT TITLE</h1>
+                            <h1>{data.title}</h1>
                             <nav>
                                 <button>Delete</button>
                                 <Link to="edit">Edit</Link>
                             </nav>
                         </header>
                         <div id="event-details-content">
-                            <img src="" alt="" />
+                            <img
+                                src={"http://localhost:3000/" + data.image}
+                                alt=""
+                            />
                             <div id="event-details-info">
                                 <div>
                                     <p id="event-details-location">
-                                        EVENT LOCATION
+                                        {data.location}
                                     </p>
                                     <time dateTime={`Todo-DateT$Todo-Time`}>
-                                        DATE @ TIME
+                                        {data.date} @ {data.time}
                                     </time>
                                 </div>
                                 <p id="event-details-description">
-                                    EVENT DESCRIPTION
+                                    {data.description}
                                 </p>
                             </div>
                         </div>
