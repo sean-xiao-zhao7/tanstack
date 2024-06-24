@@ -1,17 +1,27 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { redirect } from "react-router-dom";
 
 import Header from "../Header.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
-import { fetchEvent } from "../../util/http.js";
+import { deleteEvent, fetchEvent } from "../../util/http.js";
 
 export default function EventDetails() {
+    const navigate = useNavigate();
     const { id } = useParams();
 
-    const { data, isLoading, isError, error } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["fetchSingleEvent", { id: id }],
         queryFn: ({ signal }) => fetchEvent({ signal, id }),
+        enabled: id !== undefined,
+    });
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: () => deleteEvent({ id }),
+        onSuccess: () => {
+            navigate("/events");
+        },
         enabled: id !== undefined,
     });
 
@@ -34,7 +44,10 @@ export default function EventDetails() {
                         <header>
                             <h1>{data.title}</h1>
                             <nav>
-                                <button>Delete</button>
+                                {isPending && <LoadingIndicator />}
+                                {!isPending && (
+                                    <button onClick={mutate}>Delete</button>
+                                )}
                                 <Link to="edit">Edit</Link>
                             </nav>
                         </header>

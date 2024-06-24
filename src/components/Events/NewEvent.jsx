@@ -10,7 +10,7 @@ import { createNewEvent, queryClient } from "../../util/http.js";
 export default function NewEvent() {
     const navigate = useNavigate();
 
-    const { data, mutate, isPending, isError, error } = useMutation({
+    const { mutate, isPending, isError, error } = useMutation({
         mutationFn: createNewEvent,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["fetchEvents"] });
