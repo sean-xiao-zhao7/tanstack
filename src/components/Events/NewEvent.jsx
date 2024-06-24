@@ -12,6 +12,9 @@ export default function NewEvent() {
 
     const { data, mutate, isPending, isError, error } = useMutation({
         mutationFn: createNewEvent,
+        onSuccess: () => {
+            navigate("/events");
+        },
     });
 
     function handleSubmit(formData) {
