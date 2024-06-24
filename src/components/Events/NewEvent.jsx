@@ -5,7 +5,7 @@ import Modal from "../UI/Modal.jsx";
 import EventForm from "./EventForm.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 
-import { createNewEvent } from "../../util/http.js";
+import { createNewEvent, queryClient } from "../../util/http.js";
 
 export default function NewEvent() {
     const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function NewEvent() {
     const { data, mutate, isPending, isError, error } = useMutation({
         mutationFn: createNewEvent,
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["fetchEvents"] });
             navigate("/events");
         },
     });
