@@ -13,8 +13,8 @@ export default function NewEvent() {
     const { mutate, isPending, isError, error } = useMutation({
         mutationFn: createNewEvent,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["fetchEvents"] });
             navigate("/events");
+            queryClient.invalidateQueries({ queryKey: ["fetchEvents"] });
         },
     });
 

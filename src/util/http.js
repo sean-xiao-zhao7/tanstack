@@ -78,9 +78,10 @@ export async function fetchEvent({ signal, id }) {
     return event;
 }
 
-export async function deleteEvent({ id }) {
+export async function deleteEvent({ signal, id }) {
     const response = await fetch(`http://localhost:3000/events/${id}`, {
         method: "DELETE",
+        signal,
     });
 
     if (!response.ok) {

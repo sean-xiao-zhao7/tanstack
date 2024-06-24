@@ -1,7 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { redirect } from "react-router-dom";
 
 import Header from "../Header.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
@@ -18,9 +17,10 @@ export default function EventDetails() {
     });
 
     const { mutate, isPending } = useMutation({
-        mutationFn: () => deleteEvent({ id }),
+        mutationFn: ({ signal }) => deleteEvent({ signal, id }),
         onSuccess: () => {
             navigate("/events");
+            queryClient.invalidateQueries({ queryKey: ["fetchEvents"] });
         },
         enabled: id !== undefined,
     });
