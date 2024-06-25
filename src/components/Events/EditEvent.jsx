@@ -1,27 +1,44 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import Modal from '../UI/Modal.jsx';
-import EventForm from './EventForm.jsx';
+import Modal from "../UI/Modal.jsx";
+import EventForm from "./EventForm.jsx";
+import LoadingIndicator from "../UI/LoadingIndicator.jsx";
+import { fetchEvent } from "../../util/http.js";
 
 export default function EditEvent() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const { id } = useParams();
 
-  function handleSubmit(formData) {}
+    const { data: eventData, isLoading } = useQuery({
+        queryKey: ["fetchEvent", { id: id }],
+        queryFn: ({ signal }) => fetchEvent({ signal, id }),
+    });
 
-  function handleClose() {
-    navigate('../');
-  }
+    const { data: editResult, isPending } = useMutation({
+        queryKey: ["editEvent", { id: id }],
+        queryFn: () => {},
+    });
 
-  return (
-    <Modal onClose={handleClose}>
-      <EventForm inputData={null} onSubmit={handleSubmit}>
-        <Link to="../" className="button-text">
-          Cancel
-        </Link>
-        <button type="submit" className="button">
-          Update
-        </button>
-      </EventForm>
-    </Modal>
-  );
+    function handleSubmit(formData) {}
+
+    function handleClose() {
+        navigate("../");
+    }
+
+    return (
+        <Modal onClose={handleClose}>
+            {isLoading && <LoadingIndicator />}
+            {!isLoading && (
+                <EventForm inputData={eventData} onSubmit={handleSubmit}>
+                    <Link to="../" className="button-text">
+                        Cancel
+                    </Link>
+                    <button type="submit" className="button">
+                        Update
+                    </button>
+                </EventForm>
+            )}
+        </Modal>
+    );
 }
