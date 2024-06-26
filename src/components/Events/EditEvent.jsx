@@ -9,9 +9,10 @@ import { fetchEvent, queryClient, updateEvent } from "../../util/http.js";
 export default function EditEvent() {
     const navigate = useNavigate();
     const { id } = useParams();
+    const queryKey = ["fetchSingleEvent", { id }];
 
     const { data: eventData, isLoading } = useQuery({
-        queryKey: ["fetchSingleEvent", { id }],
+        queryKey: queryKey,
         queryFn: ({ signal }) => fetchEvent({ signal, id }),
     });
 
@@ -20,14 +21,22 @@ export default function EditEvent() {
             updateEvent({ signal, id, event });
         },
         onMutate: async ({ event }) => {
-            await queryClient.cancelQueries(["fetchSingleEvent", { id }]);
-            queryClient.setQueryData(["fetchSingleEvent", { id }], event);
-            navigate("../");
+            await queryClient.cancelQueries(queryKey);
+            const currentQueryData = queryClient.getQueryData([
+                "fetchSingleEvent",
+                { id },
+            ]);
+            queryClient.setQueryData(queryKey, event);
+            return { currentQueryData };
+        },
+        onError: (context) => {
+            queryClient.setQueryData(queryKey, context.currentQueryData);
         },
     });
 
     function handleSubmit(formData) {
         mutate({ event: formData });
+        navigate("../");
     }
 
     function handleClose() {
