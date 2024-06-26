@@ -4,23 +4,32 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import Modal from "../UI/Modal.jsx";
 import EventForm from "./EventForm.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
-import { fetchEvent } from "../../util/http.js";
+import { fetchEvent, queryClient, updateEvent } from "../../util/http.js";
 
 export default function EditEvent() {
     const navigate = useNavigate();
     const { id } = useParams();
 
     const { data: eventData, isLoading } = useQuery({
-        queryKey: ["fetchEvent", { id: id }],
+        queryKey: ["fetchSingleEvent", { id }],
         queryFn: ({ signal }) => fetchEvent({ signal, id }),
     });
 
-    const { data: editResult, isPending } = useMutation({
-        queryKey: ["editEvent", { id: id }],
-        queryFn: () => {},
+    const { mutate, isPending: isEditPending } = useMutation({
+        mutationFn: ({ signal, event }) => {
+            updateEvent({ signal, id, event });
+        },
+        onSuccess: () => {
+            navigate("../");
+            queryClient.invalidateQueries({
+                queryKey: ["fetchEvents"],
+            });
+        },
     });
 
-    function handleSubmit(formData) {}
+    function handleSubmit(formData) {
+        mutate({ event: formData });
+    }
 
     function handleClose() {
         navigate("../");
@@ -34,9 +43,14 @@ export default function EditEvent() {
                     <Link to="../" className="button-text">
                         Cancel
                     </Link>
-                    <button type="submit" className="button">
+                    <button
+                        type="submit"
+                        className="button"
+                        disabled={isEditPending}
+                    >
                         Update
                     </button>
+                    {isEditPending && <LoadingIndicator />}
                 </EventForm>
             )}
         </Modal>

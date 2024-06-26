@@ -11,7 +11,7 @@ export default function EventDetails() {
     const { id } = useParams();
 
     const { data, isLoading } = useQuery({
-        queryKey: ["fetchSingleEvent", { id: id }],
+        queryKey: ["fetchSingleEvent", { id }],
         queryFn: ({ signal }) => fetchEvent({ signal, id }),
         enabled: id !== undefined,
     });
