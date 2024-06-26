@@ -19,11 +19,10 @@ export default function EditEvent() {
         mutationFn: ({ signal, event }) => {
             updateEvent({ signal, id, event });
         },
-        onSuccess: () => {
+        onMutate: async ({ event }) => {
+            await queryClient.cancelQueries(["fetchSingleEvent", { id }]);
+            queryClient.setQueryData(["fetchSingleEvent", { id }], event);
             navigate("../");
-            queryClient.invalidateQueries({
-                queryKey: ["fetchEvents"],
-            });
         },
     });
 
