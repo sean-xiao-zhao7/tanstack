@@ -22,15 +22,12 @@ export default function EditEvent() {
         },
         onMutate: async ({ event }) => {
             await queryClient.cancelQueries(queryKey);
-            const currentQueryData = queryClient.getQueryData([
-                "fetchSingleEvent",
-                { id },
-            ]);
+            const currentQueryData = queryClient.getQueryData(queryKey);
             queryClient.setQueryData(queryKey, event);
             return { currentQueryData };
         },
-        onError: (context) => {
-            queryClient.setQueryData(queryKey, context.currentQueryData);
+        onSettled: () => {
+            queryClient.invalidateQueries(queryKey);
         },
     });
 

@@ -108,6 +108,7 @@ export async function updateEvent({ signal, id, event }) {
         const error = new Error("An error occurred while updating the event");
         error.code = response.status;
         error.info = await response.json();
+        console.log(error);
         throw error;
     }
 
