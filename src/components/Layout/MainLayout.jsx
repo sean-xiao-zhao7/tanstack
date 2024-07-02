@@ -1,6 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 
 import Header from "./Header.jsx";
+import FindEventSection from "../Events/FindEventSection.jsx";
 
 export default function MainLayout() {
     return (
@@ -17,6 +18,7 @@ export default function MainLayout() {
                 </Link>
             </Header>
             <Outlet />
+            <FindEventSection />
         </>
     );
 }
