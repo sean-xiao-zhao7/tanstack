@@ -26,6 +26,10 @@ const router = createBrowserRouter([
                 path: "/events/new",
                 element: <NewEvent />,
             },
+            {
+                path: "/events/all",
+                element: <AllEventsPage />,
+            },
         ],
     },
     {
@@ -37,10 +41,6 @@ const router = createBrowserRouter([
                 element: <EditEvent />,
             },
         ],
-    },
-    {
-        path: "/allevents",
-        element: <AllEventsPage />,
     },
 ]);
 

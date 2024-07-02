@@ -13,7 +13,7 @@ export default function Events() {
                 <Link to="/" className="button">
                     Home
                 </Link>
-                <Link to="/allevents" className="button">
+                <Link to="/events/all" className="button">
                     All Events
                 </Link>
                 <Link to="/events/new" className="button">
