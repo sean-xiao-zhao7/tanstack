@@ -2,7 +2,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import Header from "../Layout/Header.jsx";
+import Header from "../Layout/MainLayout.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 import { deleteEvent, fetchEvent } from "../../util/http.js";
 
