@@ -17,7 +17,9 @@ export default function MainLayout() {
                     Add New Event
                 </Link>
             </Header>
-            <Outlet />
+            <main>
+                <Outlet />
+            </main>
             <FindEventSection />
         </>
     );
